@@ -3661,8 +3661,6 @@ int validate_instance(webs_t wp, char *name, json_object *root, json_object *act
 				if(strstr(name, "maclist") && check_cmd_injection_blacklist(value))
 					continue;
 
-				/* log wlx nvram */
-				nvram_modify_log(tmp, nvram_safe_get(tmp), value, activity_obj);
 
 				nvram_check_and_set_for_prefix(name, tmp, value);
 #if defined(RTCONFIG_NOTIFICATION_CENTER)
@@ -4158,8 +4156,6 @@ int validate_apply(webs_t wp, json_object *root)
 					if(strstr(name, "maclist") && check_cmd_injection_blacklist(value))
 						continue;
 
-					/* log wl with unit */
-					nvram_modify_log(tmp, nvram_safe_get(tmp), value, activity_obj);
 
 					nvram_set(tmp, value);
 #if defined(RTCONFIG_NOTIFICATION_CENTER)
@@ -4561,8 +4557,6 @@ int validate_apply(webs_t wp, json_object *root)
 					continue;
 				}
 
-				/* log no prefix nvram */
-				nvram_modify_log(name, nvram_safe_get(name), value, activity_obj);
 #ifdef RTCONFIG_CFGSYNC
 				save_changed_param(cfg_root, name);
 #endif                           
@@ -4820,8 +4814,6 @@ int validate_apply(webs_t wp, json_object *root)
 
 		httpd_nvram_commit();
 	}
-
-	handle_nvram_modify_log(activity_obj);
 
 	if(activity_obj)
 		json_object_put(activity_obj);
