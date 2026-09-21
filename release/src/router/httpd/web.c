@@ -111,6 +111,7 @@ typedef unsigned long long u64;
 #include "openvpn_options.h"
 #include "openvpn_config.h"
 #include "amvpn_routing.h"
+#include "openvpn_setup.h"
 #endif
 
 #include <net/if.h>
@@ -1183,7 +1184,6 @@ ej_nvram_get(int eid, webs_t wp, int argc, char_t **argv)
 //	char sid_dummy = "",
 	int from_app = 0;
 	char name_tmp[50] = {0};
-	char buffer[8000];
 #if defined(RTCONFIG_NVRAM_ENCRYPT)
 	char dec_passwd[CKN_STR8192] = {0};
 #endif
@@ -25572,6 +25572,9 @@ static void do_CoBrand_png(char *url, FILE *stream)
     int brand = nvram_get_int("CoBrand");
     char path[128] = {0};
     char *dotPng = strstr(url, ".png");
+
+    if (dotPng == NULL)
+        return;
 
     *dotPng = '\0';
     if(brand > 0)
