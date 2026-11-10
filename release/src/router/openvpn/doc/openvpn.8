@@ -2559,6 +2559,11 @@ stale\-routes\-check n [t]
 .sp
 If \fBt\fP is not present it defaults to \fBn\fP\&.
 .sp
+Only dynamically learned routes are subject to this check. Routes added from
+configuration, such as \fB\-\-iroute\fP entries and a client\(aqs pushed ifconfig
+address, are never removed by it; they are dropped only when the client
+disconnects.
+.sp
 This option helps to keep the dynamic routing table small. See also
 \fB\-\-max\-routes\-per\-client\fP
 .TP

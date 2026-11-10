@@ -2707,6 +2707,18 @@ do_deferred_options(struct context *c, const unsigned int found, const bool is_u
         return false;
     }
 
+    /* The epoch data format is defined for AEAD ciphers only. A peer may push
+     * the tag along with a non-AEAD cipher, so this has to be checked here
+     * rather than trusted */
+    if (epoch_data && !cipher_kt_mode_aead(c->options.ciphername))
+    {
+        msg(D_PUSH_ERRORS,
+            "OPTIONS ERROR: Epoch key data format tag requires an AEAD "
+            "cipher, but '%s' was negotiated.",
+            c->options.ciphername);
+        return false;
+    }
+
 
     if (found & OPT_P_PUSH_MTU)
     {
@@ -3333,7 +3345,7 @@ do_init_crypto_tls(struct context *c, const unsigned int flags)
 
     /* should we not xmit any packets until we get an initial
      * response from client? */
-    if (to.server && c->mode == CM_CHILD_TCP)
+    if (to.server && (c->mode == CM_CHILD_TCP || (c->mode == CM_P2P && options->ce.proto == PROTO_TCP_SERVER)))
     {
         to.xmit_hold = true;
     }

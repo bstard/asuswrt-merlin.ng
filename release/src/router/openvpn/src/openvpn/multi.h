@@ -234,8 +234,9 @@ struct multi_route
     struct mroute_addr addr;
     struct multi_instance *instance;
 
-#define MULTI_ROUTE_CACHE   (1 << 0)
-#define MULTI_ROUTE_AGEABLE (1 << 1)
+#define MULTI_ROUTE_CACHE     (1 << 0)
+#define MULTI_ROUTE_AGEABLE   (1 << 1)
+#define MULTI_ROUTE_PERMANENT (1 << 2) /* config-derived (iroute / pushed ifconfig); never stale-aged */
     unsigned int flags;
 
     unsigned int cache_generation;
@@ -661,28 +662,27 @@ multi_process_outgoing_link_dowork(struct multi_context *m, struct multi_instanc
  * Determines if the ifconfig_push_local address falls into the range of the local
  * IP addresses of the VPN interface (ifconfig_local with ifconfig_remote_netmask)
  *
- * @param mi           The multi-instance to check this condition for
+ * @param o            The instance wide options
  * @param dest         The destination IP address to check
  *
  * @return Returns true if ifconfig_push is outside that range and requires an extra
  * route to be installed.
  */
 bool
-multi_check_push_ifconfig_extra_route(struct multi_instance *mi, in_addr_t dest);
+multi_check_push_ifconfig_extra_route(const struct options *o, in_addr_t dest);
 
 /**
  * Determines if the ifconfig_ipv6_local address falls into the range of the local
  * IP addresses of the VPN interface (ifconfig_local with ifconfig_remote_netmask)
  *
- * @param mi           The multi-instance to check this condition for
+ * @param o            The instance wide options
  * @param dest         The destination IPv6 address to check
  *
  * @return Returns true if ifconfig_push is outside that range and requires an extra
  * route to be installed.
  */
 bool
-multi_check_push_ifconfig_ipv6_extra_route(struct multi_instance *mi,
-                                           struct in6_addr *dest);
+multi_check_push_ifconfig_ipv6_extra_route(const struct options *o, const struct in6_addr *dest);
 
 /*
  * Check for signals.
